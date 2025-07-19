@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+if [[ -z "${PNPM_SCRIPT_SRC_DIR:-}" ]]; then
+  echo "No PNPM_SCRIPT_SRC_DIR found. Please run from pnpm." >&2
+  exit 1
+fi
+
+COLOR=true
+
+. "${PNPM_SCRIPT_SRC_DIR%/*}/scripts/bin/lib/_"
+
+function run() {
+  local target svg
+  target="${1}" svg="${2}"
+  pnpm --silent run "${target}" > doc/examples/tmp.dot
+  dot -Tsvg doc/examples/tmp.dot > "doc/examples/${svg}.svg"
+  rm doc/examples/tmp.dot
+}
+
+run example:class        class
+run example:dependencies dependencies
+run example:struct       struct
+run example:doc-example  doc-example
+run example:kitchen-sink kitchen-sink
+
+show_done
+

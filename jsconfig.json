@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES6",
+    "strictNullChecks": true
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["**/*.js", "**/*.cjs"]
+}

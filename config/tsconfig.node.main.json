@@ -1,0 +1,19 @@
+{
+  "display": "node.main",
+  "extends": ["./tsconfig.node.json"],
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": ["../index.ts", "../src/**/*.ts"],
+  "exclude": [
+    "../src/test.ts",
+    "../src/test.setup.ts",
+    "../src/test/**/*.*",
+    "../src/**/*.test.ts",
+    "../src/**/*.test.tsx",
+    "../src/**/*.test-d.*"
+  ]
+}

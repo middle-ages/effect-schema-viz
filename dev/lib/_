@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+. "$(dirname "${BASH_SOURCE[0]}")/fx"
+. "$(dirname "${BASH_SOURCE[0]}")/fs"
+. "$(dirname "${BASH_SOURCE[0]}")/repo"

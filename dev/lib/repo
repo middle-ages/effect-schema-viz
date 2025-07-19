@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [[ -z "${PNPM_SCRIPT_SRC_DIR:-}" ]]; then
+  echo "No PNPM_SCRIPT_SRC_DIR found. Please run from pnpm." >&2
+  exit 1
+fi
+
+export WORKSPACE_DIR="${PNPM_SCRIPT_SRC_DIR}"
+
+function set_workspace_env() {
+  local workspace_dir
+  workspace_dir="${1}"
+  export WORKSPACE_PACKAGE_JSON="${workspace_dir}/package.json"
+  export WORKSPACE_CONFIG_DIR="${workspace_dir}/config"
+  export WORKSPACE_DIST_DIR="${workspace_dir}/dist"
+  export WORKSPACE_API_DOC_DIR="${workspace_dir}/api-docs"
+}
+
+set_workspace_env "${WORKSPACE_DIR}"
+
+function show_workspace_path() {
+  show_path "${1}" "${2:-WORKSPACE_DIR}"
+}
+
+function show_workspace_paths() {
+  show_paths "${WORKSPACE_DIR}" "${@}"
+}

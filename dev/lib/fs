@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+shopt -s extglob
+
+function dirname2() {
+  dirname "$(dirname "${1}")"
+}
+
+function join_statements() {
+  local head statements statement result
+  head="${1}"
+  statements=("${@:2}")
+  result="${head}"
+  for statement in "${statements[@]}"; do
+    result="${result};${statement}"
+  done
+  echo -n "${result}"
+}
+
+function show_path() {
+  local path base formatted
+  path="${1}" base="${2}"
+  formatted="$(realpath --relative-to="${base}" "${path}")"
+  color_path "${formatted}"
+}
+
+function show_paths() {
+  local base paths formatted
+  base="${1:-}"
+  shift
+  paths=("${@}") formatted=()
+  for s in "${paths[@]}"; do
+    formatted+=("$(show_path "${s}" "${base}")")
+  done
+  show_array "${formatted[@]}"
+}

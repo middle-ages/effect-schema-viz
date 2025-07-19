@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+. "$(dirname "${0}")/lib/_"
+
+tsc --build --noEmit "${@}"

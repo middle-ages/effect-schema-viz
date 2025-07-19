@@ -1,0 +1,21 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../dist",
+    "rootDir": "..",
+
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "incremental": true,
+    "noErrorTruncation": true,
+
+    "allowJs": false,
+    "checkJs": false,
+
+    "moduleDetection": "force",
+    "allowSyntheticDefaultImports": false,
+    "noUncheckedSideEffectImports": true,
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true
+  }
+}

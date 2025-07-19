@@ -1,0 +1,24 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../src/index.ts"],
+  "out": "../api-docs",
+  "readme": "../README.md",
+  "hideGenerator": true,
+  "searchInComments": true,
+  "json": "../api-docs/typedoc-index.json",
+  "searchInDocuments": true,
+  "tsconfig": "./tsconfig.node.main.json",
+  "githubPages": true,
+  "cleanOutputDir": false,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": false,
+    "includeFolders": true
+  },
+  "visibilityFilters": {
+    "@internal": false
+  },
+  "sourceLinkExternal": true,
+  "projectDocuments": ["../src/diagram/README.md", "../src/diagram/doc/effect-schema-viz-diagram-model.png"]
+}
+

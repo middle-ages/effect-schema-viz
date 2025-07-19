@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+. "$(dirname "${0}")/lib/_"
+
+clean_dirs=(dist api-docs)
+
+for dir in "${clean_dirs[@]}"; do
+  if [[ -d "${dir}" ]]; then
+    log "🧹 Cleaning “${dir}”"
+    rm -rf "${dir}"
+  fi
+done
+

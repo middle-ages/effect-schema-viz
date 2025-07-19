@@ -1,0 +1,8 @@
+{
+  "display": "node.dev",
+  "extends": ["./tsconfig.node.json"],
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["./eslint.config.ts", "./vitest.config.ts"]
+}

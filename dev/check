@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+. "$(dirname "${0}")/lib/_"
+
+echo "# ⚖ Checking…"
+
+pnpm typecheck
+pnpm test
+pnpm circular

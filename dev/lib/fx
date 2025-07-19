@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+
+export X="\e[0m"     
+export red="\e[031m"   
+export green="\e[032m" 
+export yellow="\e[033m"
+export blue="\e[034m"  
+export magenta="\e[035m"
+export cyan="\e[036m"  
+export bold="\e[001m"  
+export dim="\e[002m"  
+export italic="\e[003m"  
+
+function colorize() {
+  local requested_color message color
+  requested_color="${1}" message="${2}"
+  if [[ -n "${COLOR:-}" ]]; then
+    color="${requested_color}"
+  else 
+    color=''
+  fi
+  echo -en "${color}${message}${X}"
+}
+
+function color_path() {
+  local path
+  path="${1:-}"
+  colorize "${cyan}" "${path}"
+}
+
+function color_name() {
+  local name
+  name="${1:-}"
+  colorize "${yellow}" "${name}"
+}
+
+function color_head() {
+  local head
+  head="${1:-}"
+  colorize "${magenta}${italic}" "${head}"
+}
+
+function color_error() {
+  local message
+  message="${1:-}"
+  colorize "${red}${bold}" "${message}"
+}
+
+function color_blue() {
+  local message
+  message="${1:-}"
+  colorize "${blue}" "${message}"
+}
+
+function color_magenta() {
+  local message
+  message="${1:-}"
+  colorize "${magenta}" "${message}"
+}
+
+function color_green() {
+  local message
+  message="${1:-}"
+  colorize "${green}${bold}" "${message}"
+}
+
+declare -A DIGITS=()
+DIGITS[1]=⒈
+DIGITS[2]=⒉ 
+DIGITS[3]=⒊
+DIGITS[4]=⒋
+DIGITS[5]=⒌
+DIGITS[6]=⒍
+DIGITS[7]=⒎
+DIGITS[8]=⒏
+DIGITS[9]=⒐
+
+function log() {
+  local message
+  message="${1}"
+  if [[ -z "${SILENT:-}" ]]; then
+    echo -e "# ${message}"
+  fi
+}
+
+function die() {
+  local message byline
+  message="${1:-}" byline="${2:-}"
+  echo -e "❌ $(color_error Error) ${message}">&2
+  if [[ -n "${byline}" ]]; then
+    echo -e "   ${byline}">&2
+  fi
+  exit 1
+}
+
+function show_array() {
+  local head array i color
+  head="${1}" i=2
+  shift
+  array=("${@}")
+  echo -en "${DIGITS[1]}$(color_blue "${head}")"
+  for s in "${array[@]}"; do
+    echo -en " ${DIGITS[$i]}$(color_blue "${s}")"
+    (( i++ ))
+  done
+}
+
+function show_union() {
+  local head array color
+  head="${1}"
+  shift
+  array=("${@}")
+  echo -en "“$(color_magenta "${head}")”"
+  for s in "${array[@]}"; do
+    echo -en" | “$(color_magenta "${s}")”"
+  done
+}
+
+function show_valid_values() {
+  local array
+  array=("${@}")
+  echo -e "Valid values are $(show_union "${array[@]}")."
+}
+
+function missing_value_error() {
+  local name value
+  name="${1}"
+  die "Missing “$(color_error "${name}")” argument."
+}
+
+function invalid_value_error() {
+  local name value
+  name="${1}" value="${2}"
+  shift 2
+  array=("${@}")
+  die "Invalid ${name}: “${value}”." \
+    "$(show_valid_values "${array[@]}")"
+}
+
+function show_done() {
+  log "$(color_green Done)."
+}
+
+function strip_ansi() {
+  sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<< "${1}"
+}
+
+function measure_length() {
+  local s
+  s="$(strip_ansi "${1:-}")"
+  echo "${#s}"
+}
+
+function pad_left() {
+ local message max_width
+ message="${1}" max_width="${2}"
+ 
+ local length pad_length pad
+ length="$(measure_length "${message}")"
+ pad_length=$(( max_width - length ))
+ pad="$(printf "%${pad_length}s")"
+ echo -en "${message}${pad}"
+}

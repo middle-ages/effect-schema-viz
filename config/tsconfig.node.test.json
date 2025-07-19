@@ -1,0 +1,16 @@
+{
+  "display": "node.test",
+  "extends": ["./tsconfig.node.json"],
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["vitest/globals"]
+  },
+  "include": [
+    "../src/test.ts",
+    "../src/test.setup.ts",
+    "../src/test/**/*.*",
+    "../src/**/*.test.ts",
+    "../src/**/*.test.tsx",
+    "../src/**/*.test-d.*"
+  ]
+}

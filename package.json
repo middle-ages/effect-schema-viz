@@ -1,0 +1,130 @@
+{
+  "name": "effect-schema-viz",
+  "description": "Visualize your Effect/Schema in Graphviz.",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Ran Eilam <ran@haag59.com> (https://middle-ages.github.io/)",
+  "license": "ISC",
+  "scripts": {
+    "clean": "clean",
+    "lint": "lint",
+    "lint:fix": "lint-fix",
+    "test": "test-run",
+    "test:watch": "test-watch",
+    "coverage": "coverage",
+    "typecheck": "typecheck",
+    "example:class": "src/test/examples/class.ts",
+    "example:dependencies": "src/test/examples/dependencies.ts",
+    "example:struct": "src/test/examples/struct.ts",
+    "example:doc-example": "src/test/examples/doc-example.ts",
+    "example:kitchen-sink": "src/test/examples/kitchen-sink.ts",
+    "build": "build",
+    "build:docs": "build-docs",
+    "build:examples": "dev/build-examples"
+  },
+  "devDependencies": {
+    "@effect/vitest": "catalog:",
+    "@eslint/js": "catalog:",
+    "@fast-check/vitest": "catalog:",
+    "@tsconfig/node24": "catalog:",
+    "@tsconfig/strictest": "catalog:",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "config": "workspace:^",
+    "dependency-cruiser": "catalog:",
+    "effect-ts-laws": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-prettier": "catalog:",
+    "eslint-plugin-sonarjs": "catalog:",
+    "eslint-plugin-unicorn": "catalog:",
+    "fast-check": "catalog:",
+    "globals": "catalog:",
+    "jiti": "catalog:",
+    "scripts": "workspace:^",
+    "tsx": "catalog:",
+    "typedoc": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@effect/typeclass": "catalog:",
+    "effect": "catalog:",
+    "prettier": "catalog:",
+    "ts-graphviz": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./index.d.ts",
+        "import": "./index.js"
+      }
+    },
+    "./*": {
+      "import": {
+        "types": "./src/*.d.ts",
+        "import": "./src/*.js"
+      }
+    }
+  },
+  "imports": {
+    "#util": {
+      "import": {
+        "types": "./src/util.d.ts",
+        "import": "./src/util.js"
+      }
+    },
+    "#model": {
+      "import": {
+        "types": "./src/diagram/model.d.ts",
+        "import": "./src/diagram/model.js"
+      }
+    },
+    "#fold": {
+      "import": {
+        "types": "./src/diagram/fold.d.ts",
+        "import": "./src/diagram/fold.js"
+      }
+    },
+    "#render": {
+      "import": {
+        "types": "./src/diagram/render.d.ts",
+        "import": "./src/diagram/render.js"
+      }
+    },
+    "#annotations": {
+      "import": {
+        "types": "./src/schema/annotations.d.ts",
+        "import": "./src/schema/annotations.js"
+      }
+    },
+    "#compile": {
+      "import": {
+        "types": "./src/schema/compile.d.ts",
+        "import": "./src/schema/compile.js"
+      }
+    },
+    "#test": {
+      "import": {
+        "types": "./src/test.d.ts",
+        "import": "./src/test.js"
+      }
+    }
+  },
+  "publishConfig": {
+    "directory": "dist"
+  },
+  "private": false,
+  "homepage": "https://github.com/middle-ages/haag59-monorepo/tree/main/packages/effect-schema-viz",
+  "bugs": "https://github.com/middle-ages/haag59-monorepo/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/middle-ages/haag59-monorepo/tree/main/packages/effect-schema-viz"
+  },
+  "keywords": [
+    "effect",
+    "schema",
+    "graphviz",
+    "visualization"
+  ]
+}
