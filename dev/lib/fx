@@ -14,7 +14,7 @@ export italic="\e[003m"
 function colorize() {
   local requested_color message color
   requested_color="${1}" message="${2}"
-  if [[ -n "${COLOR:-}" ]]; then
+  if [[ "${COLOR:-}" == 'true' ]]; then
     color="${requested_color}"
   else 
     color=''
@@ -137,10 +137,6 @@ function invalid_value_error() {
     "$(show_valid_values "${array[@]}")"
 }
 
-function show_done() {
-  log "$(color_green Done)."
-}
-
 function strip_ansi() {
   sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<< "${1}"
 }
@@ -160,4 +156,30 @@ function pad_left() {
  pad_length=$(( max_width - length ))
  pad="$(printf "%${pad_length}s")"
  echo -en "${message}${pad}"
+}
+
+function pad_right() {
+ local message max_width
+ message="${1}" max_width="${2}"
+ 
+ local length pad_length pad
+ length="$(measure_length "${message}")"
+ pad_length=$(( max_width - length ))
+ pad="$(printf "%${pad_length}s")"
+ echo -en "${pad}${message}"
+}
+
+function show_done() {
+  local s level message length
+  if [[ -z "${1:-}" ]]; then
+    s=""
+  else
+    s=" ${1}"
+  fi
+
+  level="${LEVEL:-0}"
+  message="$(color_green Done)${s}." 
+  length="$(measure_length "${message}")"
+  level=$(( level * 2 + length ))
+  log "$(pad_right "${message}" "${level}")"
 }

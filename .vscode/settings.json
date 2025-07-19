@@ -162,6 +162,9 @@
     "markdown",
     "json"
   ],
+  "markdownlint.config": {
+    "MD033": false
+  },
   "typescript.suggest.autoImports": true,
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always"

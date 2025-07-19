@@ -1,4 +1,3 @@
-import {type AllSchema} from '#util'
 import {Schema} from 'effect'
 import {compileAstPrimitive} from './primitive.js'
 
@@ -16,14 +15,18 @@ enum Fruits {
   Banana,
 }
 
-const testPrimitive = (name: string, schema: AllSchema, expected: string) => {
+const testPrimitive = (
+  name: string,
+  schema: Schema.Annotable.All,
+  expected: string,
+) => {
   test(name, () => {
     expect(compileAstPrimitive(schema.ast).display).toBe(expected)
   })
 }
 
 describe('primitive', () => {
-  testPrimitive('enums', Schema.Enums(Fruits), '“Apple” | “Banana”')
+  testPrimitive('enums', Schema.Enums(Fruits), '"Apple" | "Banana"')
 
   testPrimitive('literal string', Schema.Literal('foo'), '"foo"')
   testPrimitive('literal number', Schema.Literal(42), '42')
@@ -31,7 +34,7 @@ describe('primitive', () => {
   testPrimitive(
     'unique symbol',
     Schema.UniqueSymbolFromSelf(uniqueSymbol),
-    `Symbol(${uniqueSymbolName})`,
+    `UniqueSymbol["${uniqueSymbolName}"]`,
   )
 
   testPrimitive('template literal', templateLiteral, '`${string}*`')

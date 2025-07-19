@@ -2,6 +2,8 @@
 
 set -Eeuo pipefail
 
+COLOR="${COLOR:-true}"
+
 . "$(dirname "${0}")/lib/_"
 
 clean_dirs=(dist api-docs)
@@ -13,3 +15,4 @@ for dir in "${clean_dirs[@]}"; do
   fi
 done
 
+show_done 'clean'

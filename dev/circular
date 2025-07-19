@@ -6,6 +6,6 @@ COLOR="${COLOR:-true}"
 
 . "$(dirname "${0}")/lib/_"
 
-tsc --build --noEmit "${@}"
+depcruise -c config/dependency-cruiser.cjs index.ts src
 
-show_done 'typecheck'
+show_done 'circular'

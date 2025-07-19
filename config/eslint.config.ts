@@ -8,10 +8,10 @@ import tslint from 'typescript-eslint'
 
 const config = tslint.config(
   globalIgnores([
-    '../node_modules',
-    '../dist',
-    '../api-docs',
-    './dependency-cruiser.cjs',
+    './node_modules',
+    './dist',
+    './api-docs',
+    './config/dependency-cruiser.cjs',
   ]),
 
   eslint.configs.recommended,

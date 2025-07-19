@@ -11,7 +11,7 @@ Visualize your Effect/Schema.
     - [1. Requirements](#1-requirements)
     - [2. Install](#2-install)
     - [3. Use From Code](#3-use-from-code)
-  - [Examples](#examples)
+  - [More Examples](#more-examples)
   - [Features](#features)
   - [Using](#using)
     - [Importing](#importing)
@@ -49,7 +49,7 @@ Create a script in your project source folder, for example `src/show-schema.ts`:
 ```ts
 #!/usr/bin/env tsx
 
-import {Schema} from 'effect'
+import {Effect, pipe, Schema} from 'effect'
 import {schemasToDot} from 'effect-schema-viz'
 
 class Person extends Schema.Class<Person>('Person')({
@@ -57,7 +57,9 @@ class Person extends Schema.Class<Person>('Person')({
   name: Schema.String,
 }) {}
 
-console.log(schemasToDot('example')(Person))
+const dot = await pipe(Person, schemasToDot('example'), Effect.runPromise)
+
+console.log(dot)
 ```
 
 Run the script with:
@@ -70,16 +72,16 @@ Your SVG diagram should look like this:
 
 ![example](doc/examples/doc-example.svg)
 
-<details><summary><b>Click here for more examples.</b></summary>
+## More Examples
 
-## Examples
+<details><summary><b>Click here for more examples.</b></summary>
 
 |                Source                              |                   Diagram             |
 |----------------------------------------------------|---------------------------------------|
-|[struct.ts](src/test/examples/struct.ts)            |![image](doc/examples/struct.svg)      |
-|[class.ts](src/test/examples/class.ts)              |![image](doc/examples/class.svg)       |
-|[kitchen-sink.ts](src/test/examples/kitchen-sink.ts)|![image](doc/examples/kitchen-sink.svg)|
-|[dependencies.ts](src/test/examples/dependencies.ts)|![image](doc/examples/dependencies.svg)|
+|[struct.ts](src/examples/struct.ts)            |![image](doc/examples/struct.svg)      |
+|[class.ts](src/examples/class.ts)              |![image](doc/examples/class.svg)       |
+|[kitchen-sink.ts](src/examples/kitchen-sink.ts)|![image](doc/examples/kitchen-sink.svg)|
+|[dependencies.ts](src/examples/dependencies.ts)|![image](doc/examples/dependencies.svg)|
 
 </details>
 
@@ -96,16 +98,30 @@ Your SVG diagram should look like this:
 Everything can be imported from the single entry point `effect-schema-viz`:
 
 ```ts
+import {pipe, Effect} from 'effect'
 import {schemasToDot} from 'effect-schema-viz'
 import MyObjectTypeSchema from 'somewhere'
 
 // Compile schema to Graphviz .dot format.
-console.log(schemasToDot('MyObjectType')(MyObjectTypeSchema))
+const dot = await pipe(MyObjectTypeSchema, schemasToDot('MyObjectType'), Effect.runPromise)
+
+console.log(dot)
 ```
 
 ### Graphing Object Type Schemas
 
+`schemasToDot` is the function used to convert schemas to dot format.
+
+If you have a graph and just want to add nodes, or want the errors in the return value and not shown on the graph, you can use some of the variants of `schemasToDot`:
+
+1. `addSchemasAndErrors`
+2. `graphSchemas`
+3. `addSchemas`
+4. `addObjectType`
+
 #### Error Handling
+
+`schemasToDot` will render all errors as error nodes inside the diagram. Use `addSchemas` to get the errors with the return value.
 
 ### Customizing Appearance
 
@@ -135,14 +151,16 @@ const annotated = setNodeAttributes({
     2. Create your structs using [Struct.named(name)({...})](https://github.com/middle-ages/haag59-monorepo/blob/main/packages/effect-schema-viz/src/schema/annotations.ts#L76).
     3. Call the function [setIdentifier](https://github.com/middle-ages/haag59-monorepo/blob/main/packages/effect-schema-viz/src/schema/annotations.ts#L44) on the `Struct`.
     4. Use _classes_ instead of _structs_. Classes are identifiable with no extra work. You can also _wrap_ you structs with classes.
-2. No support yet for relations other than _has a_.
-3. No support yet for _Records_ or _index signatures_.
-4. Nothing is written yet on the _edges_.
-5. No support yet for _custom declarations_.
+2. Struct tag names are not yet usable as identifiers for anonymous structs.
+3. No support yet for relations other than _has a_.
+4. No support yet for _Records_ or _index signatures_.
+5. Nothing is written yet on the _edges_.
+6. No support yet for _custom declarations_.
 
 ## See Also
 
 1. [API Documentation](https://middle-ages.github.io/effect-schema-viz-docs).
-2. [`src/diagram`](src/diagram) package [type diagram](https://raw.githubusercontent.com/middle-ages/haag59-monorepo/refs/heads/main/packages/effect-schema-viz/src/diagram/doc/effect-schema-viz-diagram-model.png).
-3. [graphviz-ts](https://github.com/ts-graphviz/ts-graphviz).
-4. [Effect/Schema](https://effect.website/docs/schema/introduction).
+2. [Github project](https://github.com/middle-ages/effect-schema-viz).
+3. [`src/diagram`](src/diagram) package [type diagram](https://raw.githubusercontent.com/middle-ages/haag59-monorepo/refs/heads/main/packages/effect-schema-viz/src/diagram/doc/effect-schema-viz-diagram-model.png).
+4. [graphviz-ts](https://github.com/ts-graphviz/ts-graphviz).
+5. [Effect/Schema](https://effect.website/docs/schema/introduction).

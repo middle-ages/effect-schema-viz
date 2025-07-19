@@ -1,26 +1,30 @@
 {
   "name": "effect-schema-viz",
   "description": "Visualize your Effect/Schema in Graphviz.",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "type": "module",
   "author": "Ran Eilam <ran@haag59.com> (https://middle-ages.github.io/)",
   "license": "ISC",
   "scripts": {
-    "clean": "clean",
-    "lint": "lint",
-    "lint:fix": "lint-fix",
-    "test": "test-run",
-    "test:watch": "test-watch",
-    "coverage": "coverage",
-    "typecheck": "typecheck",
-    "example:class": "src/test/examples/class.ts",
-    "example:dependencies": "src/test/examples/dependencies.ts",
-    "example:struct": "src/test/examples/struct.ts",
-    "example:doc-example": "src/test/examples/doc-example.ts",
-    "example:kitchen-sink": "src/test/examples/kitchen-sink.ts",
-    "build": "build",
-    "build:docs": "build-docs",
-    "build:examples": "dev/build-examples"
+    "clean": "dev/clean",
+    "lint": "dev/lint",
+    "lint:fix": "dev/lint-fix",
+    "test": "dev/test-run",
+    "test:watch": "dev/test-watch",
+    "coverage": "dev/coverage",
+    "typecheck": "dev/typecheck",
+    "circular": "dev/circular",
+    "example:class": "src/examples/class.ts",
+    "example:dependencies": "src/examples/dependencies.ts",
+    "example:struct": "src/examples/struct.ts",
+    "example:doc-example": "src/examples/doc-example.ts",
+    "example:kitchen-sink": "src/examples/kitchen-sink.ts",
+    "example:errors": "src/examples/errors.ts",
+    "build:docs": "dev/build-docs",
+    "build:examples": "dev/build-examples",
+    "build": "dev/build",
+    "build:all": "dev/build-all",
+    "publish:docs": "dev/publish-docs"
   },
   "devDependencies": {
     "@effect/vitest": "catalog:",
@@ -30,7 +34,6 @@
     "@tsconfig/strictest": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "config": "workspace:^",
     "dependency-cruiser": "catalog:",
     "effect-ts-laws": "catalog:",
     "eslint": "catalog:",
@@ -41,9 +44,9 @@
     "fast-check": "catalog:",
     "globals": "catalog:",
     "jiti": "catalog:",
-    "scripts": "workspace:^",
     "tsx": "catalog:",
     "typedoc": "catalog:",
+    "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "vitest": "catalog:"
   },
@@ -115,16 +118,31 @@
     "directory": "dist"
   },
   "private": false,
-  "homepage": "https://github.com/middle-ages/haag59-monorepo/tree/main/packages/effect-schema-viz",
-  "bugs": "https://github.com/middle-ages/haag59-monorepo/issues",
+  "homepage": "https://github.com/middle-ages/effect-schema-viz",
+  "bugs": "https://github.com/middle-ages/effect-schema-viz/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/middle-ages/haag59-monorepo/tree/main/packages/effect-schema-viz"
+    "url": "git+https://github.com/middle-ages/effect-schema-viz"
   },
   "keywords": [
     "effect",
     "schema",
+    "effect/schema",
     "graphviz",
     "visualization"
-  ]
+  ],
+  "prettier": {
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "bracketSameLine": true,
+    "endOfLine": "lf"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  }
 }

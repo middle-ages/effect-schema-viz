@@ -1,11 +1,10 @@
 import {setIdentifier, Struct} from '#annotations'
 import {pipe, Schema} from 'effect'
 import {compileAstReference} from './reference.js'
-import type {AllSchema} from '#util'
 
 const testReference = (
   name: string,
-  schema: AllSchema,
+  schema: Schema.Annotable.All,
   expected: string,
   expectedTargets: string[] = [],
 ) => {
@@ -172,4 +171,27 @@ describe('reference', () => {
   testReference('suspend', TreeNode, 'TreeNode', ['TreeNode'])
 
   testReference('class', Person, 'Person', ['Person'])
+
+  testReference(
+    'pair of class',
+    Schema.Tuple(Person, Person),
+    '[Person, Person]',
+    ['Person'],
+  )
+
+  testReference(
+    'tuple of class with optional',
+    Schema.Tuple(Person, Schema.optionalElement(Person)),
+    '[Person, Person?]',
+    ['Person'],
+  )
+
+  testReference(
+    'restTuple',
+    Schema.Tuple([Person], Person),
+    '[Person, ...Person[]]',
+    ['Person'],
+  )
+
+  testReference('array', Schema.Array(Person), 'Person[]', ['Person'])
 })

@@ -1,11 +1,7 @@
-import {pipe, Array, Schema, String} from 'effect'
+import {Array, pipe, String} from 'effect'
 import {type Pair} from './util/Pair.js'
-import type {UnionToIntersection} from 'effect/Types'
 
-export * as These from './util/These.js'
 export * from './util/Pair.js'
-
-export type AllSchema = Schema.Annotable.All
 
 /** Surround a string with the given string pair. */
 export const surround =
@@ -37,6 +33,8 @@ surround.quote = Object.assign(surround(["'", "'"]), {
 
 /** Build a line from an array of words. */
 export const unwords = (words: ReadonlyArray<string>): string => words.join('')
+
+unwords.spaced = (words: ReadonlyArray<string>): string => words.join(' ')
 
 /** An untupled version of {@link unwords}. */
 unwords.rest = (...words: ReadonlyArray<string>): string => unwords(words)
@@ -86,28 +84,8 @@ export const suffix: (suffix: string) => (s: string) => string = String.concat
 export const unlines = (lines: ReadonlyArray<string>): string =>
   lines.join('\n')
 
-/**
- * For example:
- *
- * ```ts
- * UnionToTuple<true | 42 | 'hello'> ≡ [true, 42, 'hello']
- * ```
- */
-export type UnionToTuple<Union, Tuple extends readonly unknown[] = []> = [
-  Union,
-] extends [UnionToIntersection<Union>]
-  ? readonly [Union, ...Tuple]
-  : UnionToTuple<
-      Exclude<Union, PopUnion<Union>>,
-      readonly [PopUnion<Union>, ...Tuple]
-    >
-
-type PopUnion<U> =
-  UnionToIntersection<U extends unknown ? (f: U) => void : never> extends (
-    a: infer A,
-  ) => void
-    ? A
-    : never
+/** A rest version of `unlines`. */
+unlines.rest = (...lines: ReadonlyArray<string>): string => unlines(lines)
 
 /** `dedupeWith` string equivalence. */
 export const dedupeStrings: (self: Iterable<string>) => typeof self =

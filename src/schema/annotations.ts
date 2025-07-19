@@ -10,7 +10,7 @@ import type {
   GraphAttributesObject,
   NodeAttributesObject,
 } from 'ts-graphviz'
-import {type AllSchema, fanout} from '#util'
+import {fanout} from '#util'
 import {getEdgeAttributes, setEdgeAttributes} from './annotations/edge.js'
 import {getNodeAttributes, setNodeAttributes} from './annotations/node.js'
 
@@ -75,7 +75,7 @@ export const setAttributes =
     nodeAttributes: NodeAttributesObject,
     edgeAttributes: GraphAttributesObject = {},
   ) =>
-  <Schema extends AllSchema>(schema: Schema): typeof schema =>
+  <Schema extends Schema.Annotable.All>(schema: Schema): typeof schema =>
     pipe(
       schema,
       setNodeAttributes(nodeAttributes),

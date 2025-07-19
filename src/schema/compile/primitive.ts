@@ -1,6 +1,6 @@
 import {Reference} from '#model'
 import {Array, identity, pipe} from 'effect'
-import {isEnums, type AST} from 'effect/SchemaAST'
+import {isEnums, isUniqueSymbol, type AST} from 'effect/SchemaAST'
 import {surround, unwords} from '#util'
 
 /**
@@ -15,11 +15,21 @@ export const compileAstPrimitive = (ast: AST): Reference =>
       ? pipe(
           ast.enums,
           Array.map(([value]) =>
-            (typeof value === 'string' ? surround.quote.fancy : identity)(
+            (typeof value === 'string' ? surround.quote.double : identity)(
               value,
             ),
           ),
           unwords.pipeline,
         )
-      : ast.toString(),
+      : isUniqueSymbol(ast)
+        ? surround.rest(
+            'UniqueSymbol["',
+            '"]',
+          )(
+            ast
+              .toString()
+              .replace(/^Symbol\(/, '')
+              .replace(/\)$/, ''),
+          )
+        : ast.toString(),
   )

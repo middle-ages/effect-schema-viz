@@ -1,6 +1,6 @@
 import {getAttributes} from '#annotations'
 import {ClassNode, Node} from '#model'
-import {Array, Data, Either, Option, pipe, Schema, SchemaAST} from 'effect'
+import {Array, Data, Effect, Option, pipe, Schema, SchemaAST} from 'effect'
 import {compilePropertySignatureAst} from './signature.js'
 
 export interface AnyClass {
@@ -8,10 +8,10 @@ export interface AnyClass {
 }
 
 export type AnyClassOf<
-  Self extends AnyClass,
+  Self extends InstanceType<AnyClass>,
   Fields extends Schema.Struct.Fields,
 > = Schema.Class<
-  InstanceType<Self>,
+  Self,
   Fields,
   Schema.Struct.Encoded<Fields>,
   Schema.Struct.Context<Fields>,
@@ -22,19 +22,19 @@ export type AnyClassOf<
 
 /** Compile a schema `Class` into a diagram node or an error. */
 export const compileClass = <
-  Self extends AnyClass,
+  Self extends InstanceType<AnyClass>,
   Fields extends Schema.Struct.Fields,
 >(
   schema: AnyClassOf<Self, Fields>,
-): Either.Either<Node, ClassError> => compileClassAst(schema.ast)
+): Effect.Effect<Node, ClassError> => compileClassAst(schema.ast)
 
-export const compileClassAst: (
+export const compileClassAst = (
   ast: SchemaAST.AST,
-) => Either.Either<Node, ClassError> = ast =>
+): Effect.Effect<Node, ClassError> =>
   pipe(
     ast,
     parseClassAst,
-    Either.map(({name, propertySignatures}) =>
+    Effect.map(({name, propertySignatures}) =>
       ClassNode(
         name,
         Array.map(propertySignatures, compilePropertySignatureAst),
@@ -50,7 +50,7 @@ interface Parsed {
 
 const parseClassAst = (
   ast: SchemaAST.AST,
-): Either.Either<Parsed, ClassError> => {
+): Effect.Effect<Parsed, ClassError> => {
   // A class is a transform.
   if (!SchemaAST.isTransformation(ast)) {
     return notAClassTransform(ast)
@@ -66,7 +66,7 @@ const parseClassAst = (
       // A class will have an identifier in its declaration.
       Option.match({
         onNone: () => missingClassIdentifier(ast),
-        onSome: name => Either.right({name, propertySignatures}),
+        onSome: name => Effect.succeed({name, propertySignatures}),
       }),
     )
   }
@@ -82,9 +82,12 @@ export const isClassAst = (
   SchemaAST.isDeclaration(ast.to)
 
 export const [notAClassTransform, missingClassIdentifier] = [
-  (ast: SchemaAST.AST) => Either.left(new ClassError.NotAClassTransform({ast})),
   (ast: SchemaAST.AST) =>
-    Either.left(new ClassError.MissingClassIdentifier({ast})),
+    Effect.fail(new ClassError.NotAClassTransform({message: ast.toString()})),
+  (ast: SchemaAST.AST) =>
+    Effect.fail(
+      new ClassError.MissingClassIdentifier({message: ast.toString()}),
+    ),
 ]
 
 /** An error that prevented the node from compiling. */
@@ -92,13 +95,13 @@ export namespace ClassError {
   export class NotAClassTransform extends Data.TaggedError(
     'NotAClassTransform',
   )<{
-    ast: SchemaAST.AST
+    message: string
   }> {}
 
   export class MissingClassIdentifier extends Data.TaggedError(
     'MissingClassIdentifier',
   )<{
-    ast: SchemaAST.AST
+    message: string
   }> {}
 }
 

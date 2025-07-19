@@ -2,10 +2,15 @@
 
 set -Eeuo pipefail
 
+COLOR="${COLOR:-true}"
+
 . "$(dirname "${0}")/lib/_"
 
 echo "# ⚖ Checking…"
 
+pnpm circular
 pnpm typecheck
 pnpm test
-pnpm circular
+pnpm build:examples
+
+show_done 'coverage'

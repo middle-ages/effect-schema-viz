@@ -1,7 +1,7 @@
 import {ClassNode, PropertySignature, Reference} from '#model'
-import {errorType} from '#test'
-import {Either, Schema} from 'effect'
-import {compileClassAst} from './class.js'
+import {it} from '@effect/vitest'
+import {Effect, pipe, Schema} from 'effect'
+import {compileClass, compileClassAst} from './class.js'
 
 describe('class', () => {
   class Person extends Schema.Class<Person>('Person')({
@@ -14,9 +14,10 @@ describe('class', () => {
     people: Schema.Array(Person),
   }) {}
 
-  test('basic', () => {
-    expect(compileClassAst(Person.ast)).toEqual(
-      Either.right(
+  it.effect('basic', () =>
+    Effect.gen(function* () {
+      const result = yield* compileClass(Person)
+      expect(result).toEqual(
         ClassNode('Person', [
           PropertySignature({
             name: 'id',
@@ -27,13 +28,14 @@ describe('class', () => {
             reference: Reference.Primitive('string'),
           }),
         ]),
-      ),
-    )
-  })
+      )
+    }),
+  )
 
-  test('with relations', () => {
-    expect(compileClassAst(Family.ast)).toEqual(
-      Either.right(
+  it.effect('with relations', () =>
+    Effect.gen(function* () {
+      const result = yield* compileClass(Family)
+      expect(result).toEqual(
         ClassNode('Family', [
           PropertySignature({
             name: 'id',
@@ -44,11 +46,18 @@ describe('class', () => {
             reference: Reference('Person[]', ['Person']),
           }),
         ]),
-      ),
-    )
-  })
+      )
+    }),
+  )
 
-  test('not a class ast', () => {
-    expect(errorType(Schema.Number.ast)).toBe('UnexpectedAst')
-  })
+  it.effect('not a class', () =>
+    Effect.gen(function* () {
+      const result = yield* pipe(
+        Schema.Number.ast,
+        compileClassAst,
+        Effect.flip,
+      )
+      expect(result._tag).toEqual('NotAClassTransform')
+    }),
+  )
 })

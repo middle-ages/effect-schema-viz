@@ -1,5 +1,4 @@
-import type {AllSchema} from '#util'
-import {Option} from 'effect'
+import {Schema, Option} from 'effect'
 import {getAnnotation, type AST} from 'effect/SchemaAST'
 import type {EdgeAttributesObject} from 'ts-graphviz'
 
@@ -20,7 +19,7 @@ declare module 'effect/Schema' {
  */
 export const setEdgeAttributes =
   (attributes: EdgeAttributesObject) =>
-  <Schema extends AllSchema>(schema: Schema) =>
+  <Schema extends Schema.Annotable.All>(schema: Schema) =>
     schema.annotations({[EdgeAttributes]: attributes}) as typeof schema
 
 /**

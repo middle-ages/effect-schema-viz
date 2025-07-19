@@ -72,5 +72,24 @@ describe('model', () => {
     test('collectTargets', () => {
       expect(Node.collectTargets(node)).toEqual(['Bam', 'Bar', 'Baz'])
     })
+
+    test('mapReferences', () => {
+      const node = Node('Foo', [
+        PropertySignature({name: 'foo', reference: Reference.Primitive('FOO')}),
+      ])
+      expect(
+        Node.mapReferences(
+          ({display, ...rest}) =>
+            ({...rest, display: `+${display}`}) as Reference,
+        )(node),
+      ).toEqual(
+        Node('Foo', [
+          PropertySignature({
+            name: 'foo',
+            reference: Reference.Primitive('+FOO'),
+          }),
+        ]),
+      )
+    })
   })
 })

@@ -1,6 +1,6 @@
 import {Struct} from '#annotations'
-import {surround} from '#util'
-import {Schema} from 'effect'
+import {it} from '@effect/vitest'
+import {Effect, Schema} from 'effect'
 import {schemasToDot} from './toDot.js'
 
 const iut = schemasToDot('diagram')
@@ -16,68 +16,106 @@ class ClassSchema extends Schema.Class<ClassSchema>('ClassSchema')({
 const AnonymousStructSchema = Schema.Struct({anonymous: Schema.Number})
 
 describe('schemasToDot', () => {
-  test('Named struct', () => {
-    expect(iut(NamedStructSchema)).toBe(
-      diagram(`  "NamedStruct" [\n    label = "NamedStruct";\n  ];`),
-    )
-  })
-
-  test('Class', () => {
-    expect(iut(ClassSchema)).toBe(
-      diagram(`  "ClassSchema" [\n    label = <${table}>;\n  ];`),
-    )
-  })
-
-  test('Named struct and class', () => {
-    expect(iut(NamedStructSchema, ClassSchema)).toBe(
-      diagram(`  "NamedStruct" [
+  it.effect('named struct', () =>
+    Effect.gen(function* () {
+      const result = yield* iut(NamedStructSchema)
+      expect(result).toBe(`digraph "diagram" {
+  "NamedStruct" [
     label = "NamedStruct";
   ];
+}`)
+    }),
+  )
+
+  it.effect('named struct', () =>
+    Effect.gen(function* () {
+      const result = yield* iut(ClassSchema)
+      expect(result).toBe(`digraph "diagram" {
   "ClassSchema" [
-    label = <${table}>;
-  ];`),
-    )
-  })
-
-  test('No object types', () => {
-    expect(iut(Schema.Number, Schema.String)).toBe(
-      diagram(`  "ERROR: no object types found" [
-    label = "ERROR: no object types found";
-    color = "red";
-    shape = "box";
-  ];`),
-    )
-  })
-
-  test('Anonymous struct', () => {
-    expect(iut(AnonymousStructSchema)).toBe(
-      diagram(`  "ERROR: missing identifier" [
-    label = "ERROR: missing identifier";
-    color = "red";
-    shape = "box";
-  ];`),
-    )
-  })
-
-  test('Anonymous + named structs', () => {
-    expect(iut(AnonymousStructSchema, NamedStructSchema)).toBe(
-      diagram(`  "NamedStruct" [
-    label = "NamedStruct";
-  ];
-  "ERROR: missing identifier" [
-    label = "ERROR: missing identifier";
-    color = "red";
-    shape = "box";
-  ];`),
-    )
-  })
-})
-
-const table = `<table cellspacing="0" cellpadding="0" border="0">
-<tr><td colspan="3" align="center" border="1" sides="B">ClassSchema</td></tr>
+    label = <<table cellpadding="0" cellspacing="0" cellborder="0" border="0">
+<tr><td colspan="3"  border="1" sides="B" align="center">ClassSchema</td></tr>
 <tr><td colspan="1" align="left">id:</td>
 <td colspan="1" align="left"> </td>
 <td colspan="1" align="left">number</td></tr>
-</table>`
+</table>>;
+  ];
+}`)
+    }),
+  )
 
-const diagram = surround.rest('digraph "diagram" {\n', '\n}')
+  it.effect('named struct and class', () =>
+    Effect.gen(function* () {
+      const result = yield* iut(NamedStructSchema, ClassSchema)
+      expect(result).toBe(`digraph "diagram" {
+  "NamedStruct" [
+    label = "NamedStruct";
+  ];
+  "ClassSchema" [
+    label = <<table cellpadding="0" cellspacing="0" cellborder="0" border="0">
+<tr><td colspan="3"  border="1" sides="B" align="center">ClassSchema</td></tr>
+<tr><td colspan="1" align="left">id:</td>
+<td colspan="1" align="left"> </td>
+<td colspan="1" align="left">number</td></tr>
+</table>>;
+  ];
+}`)
+    }),
+  )
+
+  it.effect('no object types', () =>
+    Effect.gen(function* () {
+      const result = yield* iut(Schema.Number)
+      expect(result).toBe(`digraph "diagram" {
+  "Compile ERROR: not an object type" [
+    color = "red";
+    shape = "box";
+    margin = 0.08333333333333333;
+    fontname = "Fira Code Retina";
+    label = <<table border="0" cellborder="0">
+<tr><td>Compile ERROR: not an object type</td></tr>
+<tr><td>number</td></tr>
+</table>>;
+  ];
+}`)
+    }),
+  )
+
+  it.effect('anonymous struct', () =>
+    Effect.gen(function* () {
+      const result = yield* iut(AnonymousStructSchema)
+      expect(result).toBe(`digraph "diagram" {
+  "Compile ERROR: missing struct identifier" [
+    color = "red";
+    shape = "box";
+    margin = 0.08333333333333333;
+    fontname = "Fira Code Retina";
+    label = <<table border="0" cellborder="0">
+<tr><td>Compile ERROR: missing struct identifier</td></tr>
+<tr><td>{ readonly anonymous: number }</td></tr>
+</table>>;
+  ];
+}`)
+    }),
+  )
+
+  it.effect('anonymous + named structs', () =>
+    Effect.gen(function* () {
+      const result = yield* iut(AnonymousStructSchema, NamedStructSchema)
+      expect(result).toBe(`digraph "diagram" {
+  "NamedStruct" [
+    label = "NamedStruct";
+  ];
+  "Compile ERROR: missing struct identifier" [
+    color = "red";
+    shape = "box";
+    margin = 0.08333333333333333;
+    fontname = "Fira Code Retina";
+    label = <<table border="0" cellborder="0">
+<tr><td>Compile ERROR: missing struct identifier</td></tr>
+<tr><td>{ readonly anonymous: number }</td></tr>
+</table>>;
+  ];
+}`)
+    }),
+  )
+})

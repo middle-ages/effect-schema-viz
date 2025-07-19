@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+COLOR="${COLOR:-true}"
+
+. "$(dirname "${0}")/lib/_"
+
+export LEVEL=2
+
+dev/clean
+
+dev/circular &
+dev/build-examples &
+dev/build-docs &
+dev/lint &
+dev/test-run --reporter=dot &
+
+wait
+
+pnpm build
+
+show_done 'build:all'

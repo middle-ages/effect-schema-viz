@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 
-import {Schema, pipe} from 'effect'
+import {Effect, Schema, pipe} from 'effect'
 import {setAttributes, schemasToDot, setIdentifier} from 'effect-schema-viz'
 
-const style = setAttributes({margin: 1 / 12, shape: 'box', fontname: 'Inter'})
+const style = setAttributes({margin: 1 / 24, shape: 'box', fontname: 'Inter'})
 
 // We must set an identifier on a schema before using it.
 const Foo = pipe(
@@ -15,6 +15,8 @@ const Foo = pipe(
 
 const Bar = pipe({bar: Foo}, Schema.Struct, setIdentifier('Bar'), style)
 
-const dot = schemasToDot('basic struct example')(Foo, Bar)
+const dot = await Effect.runPromise(
+  schemasToDot('basic struct example')(Foo, Bar),
+)
 
 console.log(dot)

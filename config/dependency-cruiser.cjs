@@ -195,7 +195,7 @@ module.exports = {
     /* Which modules to exclusively include (array of regular expressions in strings)
        dependency-cruiser will skip everything not matching this pattern
     */
-    includeOnly: ['^packages'],
+    includeOnly: ['index.ts', 'src/.*'],
 
     /* List of module systems to cruise.
        When left out dependency-cruiser will fall back to the list of _all_

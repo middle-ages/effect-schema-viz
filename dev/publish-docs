@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+COLOR="${COLOR:-true}"
+
+. "$(dirname "${0}")/lib/_"
+
+docs="../${WORKSPACE_NAME}-docs"
+
+cp -r api-docs/* "$docs"
+
+pushd "$docs"
+git add .
+git commit -m 'doc update'
+git push
+popd
+
+show_done 'publish:docs'

@@ -1,7 +1,6 @@
-import {Option} from 'effect'
+import {Schema, Option} from 'effect'
 import {getAnnotation, type AST} from 'effect/SchemaAST'
 import type {NodeAttributesObject} from 'ts-graphviz'
-import type {AllSchema} from '#util'
 
 /** Annotates nodes with their Graphviz node attributes. */
 export const NodeAttributes = Symbol.for('effect-schema-viz/node-attributes')
@@ -20,7 +19,7 @@ declare module 'effect/Schema' {
  */
 export const setNodeAttributes =
   (attributes: NodeAttributesObject) =>
-  <Schema extends AllSchema>(schema: Schema) =>
+  <Schema extends Schema.Annotable.All>(schema: Schema) =>
     schema.annotations({[NodeAttributes]: attributes}) as typeof schema
 
 /**

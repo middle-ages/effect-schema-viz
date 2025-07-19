@@ -11,4 +11,6 @@ export {
   EdgeAttributes,
   NodeAttributes,
 } from '#annotations'
-export * from '#compile'
+export * as Compile from '#compile'
+export * from '#render'
+export * from '#model'

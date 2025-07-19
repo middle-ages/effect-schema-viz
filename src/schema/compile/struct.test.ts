@@ -1,8 +1,9 @@
 import {Struct} from '#annotations'
 import {Node, PropertySignature, Reference} from '#model'
-import {errorType} from '#test'
-import {Schema, Either} from 'effect'
-import {compileStructAst} from './struct.js'
+import {it} from '@effect/vitest'
+import {Effect, pipe, Schema} from 'effect'
+import {pluck} from '../../util.js'
+import {compileStruct} from './struct.js'
 
 const Foo = Struct.named('Foo')({foo: Schema.Literal('Foo')})
 
@@ -12,22 +13,24 @@ const Bar = Struct.named('Bar')({
 })
 
 describe('struct', () => {
-  test('basic', () => {
-    expect(compileStructAst(Foo.ast)).toEqual(
-      Either.right(
+  it.effect('basic', () =>
+    Effect.gen(function* () {
+      const result = yield* compileStruct(Foo)
+      expect(result).toEqual(
         Node('Foo', [
           PropertySignature({
             name: 'foo',
             reference: Reference.Primitive('"Foo"'),
           }),
         ]),
-      ),
-    )
-  })
+      )
+    }),
+  )
 
-  test('with relations', () => {
-    expect(compileStructAst(Bar.ast)).toEqual(
-      Either.right(
+  it.effect('with relations', () =>
+    Effect.gen(function* () {
+      const result = yield* compileStruct(Bar)
+      expect(result).toEqual(
         Node('Bar', [
           PropertySignature({
             name: 'foo',
@@ -38,17 +41,19 @@ describe('struct', () => {
             reference: Reference.Primitive('"Bar"?'),
           }),
         ]),
-      ),
-    )
-  })
+      )
+    }),
+  )
 
-  test('not a type literal ast', () => {
-    expect(errorType(Schema.Number.ast)).toBe('UnexpectedAst')
-  })
-
-  test('no identifier', () => {
-    expect(errorType(Schema.Struct({foo: Schema.Number}).ast)).toBe(
-      'MissingIdentifier',
-    )
-  })
+  it.effect('not identifier', () =>
+    Effect.gen(function* () {
+      const result = yield* pipe(
+        Schema.Struct({foo: Schema.Number}),
+        compileStruct,
+        Effect.flip,
+        Effect.map(pluck('_tag')),
+      )
+      expect(result).toEqual('MissingStructIdentifier')
+    }),
+  )
 })

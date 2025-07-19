@@ -2,14 +2,9 @@
 
 set -Eeuo pipefail
 
-if [[ -z "${PNPM_SCRIPT_SRC_DIR:-}" ]]; then
-  echo "No PNPM_SCRIPT_SRC_DIR found. Please run from pnpm." >&2
-  exit 1
-fi
+COLOR="${COLOR:-true}"
 
-COLOR=true
-
-. "${PNPM_SCRIPT_SRC_DIR%/*}/scripts/bin/lib/_"
+. "$(dirname "${0}")/lib/_"
 
 function run() {
   local target svg
@@ -24,6 +19,7 @@ run example:dependencies dependencies
 run example:struct       struct
 run example:doc-example  doc-example
 run example:kitchen-sink kitchen-sink
+run example:errors       errors
 
-show_done
+show_done 'build:examples'
 

@@ -6,6 +6,7 @@ if [[ -z "${PNPM_SCRIPT_SRC_DIR:-}" ]]; then
 fi
 
 export WORKSPACE_DIR="${PNPM_SCRIPT_SRC_DIR}"
+export WORKSPACE_NAME="$(basename "${PNPM_SCRIPT_SRC_DIR}")"
 
 function set_workspace_env() {
   local workspace_dir

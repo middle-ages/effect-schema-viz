@@ -2,17 +2,10 @@
 
 set -Eeuo pipefail
 
+COLOR="${COLOR:-true}"
+
 . "$(dirname "${0}")/lib/_"
 
 typedoc --options config/typedoc.json index.ts
 
-docs="../${WORKSPACE_NAME}-docs"
-
-cp -r api-docs/* "$docs"
-
-pushd "$docs"
-git add .
-git commit -m 'doc update'
-git push
-popd
-
+show_done 'build:docs'

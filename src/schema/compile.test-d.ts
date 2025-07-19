@@ -1,11 +1,11 @@
 import {
-  compileSchemas,
+  schemas,
   type AnyClassOf,
   type AnyObjectType,
-  type CompileResult,
   type ObjectType,
+  type Results,
 } from '#compile'
-import {Schema} from 'effect'
+import {Schema, type Effect} from 'effect'
 
 describe('compile types', () => {
   class Foo extends Schema.Class<Foo>('Foo')({
@@ -18,7 +18,7 @@ describe('compile types', () => {
 
   test('AnyClassOf', () => {
     expectTypeOf(Foo).toExtend<
-      AnyClassOf<typeof Foo, Record<'foo', Schema.Annotable.Any>>
+      AnyClassOf<Foo, Record<'foo', Schema.Annotable.Any>>
     >()
   })
 
@@ -33,8 +33,6 @@ describe('compile types', () => {
   })
 
   test('compileSchemas', () => {
-    expectTypeOf(
-      compileSchemas([Foo, Bar]),
-    ).toEqualTypeOf<CompileResult.Results>()
+    expectTypeOf(schemas([Foo, Bar])).toEqualTypeOf<Effect.Effect<Results>>()
   })
 })

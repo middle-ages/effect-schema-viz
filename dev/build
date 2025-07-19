@@ -2,6 +2,8 @@
 
 set -Eeuo pipefail
 
+COLOR="${COLOR:-true}"
+
 . "$(dirname "${0}")/lib/_"
 
 mkdir -p dist
@@ -9,3 +11,5 @@ mkdir -p dist
 cp package.json dist
 
 tsc --build "${@}"
+
+show_done 'build'

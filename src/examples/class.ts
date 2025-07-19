@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 
-import {Schema} from 'effect'
+import {Effect, Schema} from 'effect'
 import {schemasToDot, setAttributes} from 'effect-schema-viz'
 
 const style = setAttributes({margin: 1 / 12, shape: 'box', fontname: 'Inter'})
@@ -15,6 +15,8 @@ class Family extends Schema.Class<Person>('Family')({
   people: Schema.Array(Person),
 }) {}
 
-const dot = schemasToDot('basic class example')(style(Person), style(Family))
+const dot = await Effect.runPromise(
+  schemasToDot('basic class example')(style(Person), style(Family)),
+)
 
 console.log(dot)

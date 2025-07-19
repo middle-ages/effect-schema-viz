@@ -4,5 +4,5 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["./eslint.config.ts", "./vitest.config.ts"]
+  "include": ["./eslint.config.ts", "./vitest.config.ts", "../src/examples"]
 }

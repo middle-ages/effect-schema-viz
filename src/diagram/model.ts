@@ -1,6 +1,6 @@
+import {dedupeStrings, pluck, surround} from '#util'
 import {Array, Data, flow, identity, pipe, String} from 'effect'
 import type {EdgeAttributesObject, NodeAttributesObject} from 'ts-graphviz'
-import {type UnionToTuple, dedupeStrings, surround, pluck} from '#util'
 
 export interface Reference {
   readonly display: string
@@ -21,13 +21,15 @@ export type Signature = Data.TaggedEnum<{
   IndexSignature: BaseSignature
 }>
 
-export type Signatures = UnionToTuple<Signature>
-
 /** A property signature of a struct or record type. */
-export type PropertySignature = Signatures[0]
+export interface PropertySignature extends BaseSignature {
+  _tag: 'PropertySignature'
+}
 
 /** An index signature of a struct or record type. */
-export type IndexSignature = Signatures[1]
+export interface IndexSignature extends BaseSignature {
+  _tag: 'IndexSignature'
+}
 
 /** A diagram node representing a struct or record type. */
 export interface Node extends Named {
@@ -38,10 +40,10 @@ export interface Node extends Named {
   isClass: boolean
 
   /** Graphviz node options. */
-  nodeOptions?: NodeAttributesObject
+  nodeAttributes?: NodeAttributesObject
 
   /** Graphviz edge options for all edges _exiting_ from this node. */
-  edgeOptions?: EdgeAttributesObject
+  edgeAttributes?: EdgeAttributesObject
 }
 
 export const {
@@ -86,6 +88,12 @@ export const Reference = (
   display,
   targets,
 })
+
+/** A curried version of {@link Reference}. */
+Reference.curried =
+  (targets: readonly string[]) =>
+  (display: string): Reference =>
+    Reference(display, targets)
 
 /** References to native types with no `targets`. */
 Reference.Primitive = (display: string): Reference => Reference(display, [])
@@ -142,15 +150,15 @@ export const Node = (
   signatures: readonly Signature[],
 
   /** Optional Graphviz node options. */
-  nodeOptions: NodeAttributesObject = {},
+  nodeAttributes: NodeAttributesObject = {},
 
   /** Optional Graphviz edge options for all edges _exiting_ this node. */
-  edgeOptions: EdgeAttributesObject = {},
+  edgeAttributes: EdgeAttributesObject = {},
 ): Node => ({
   name,
   signatures,
-  nodeOptions,
-  edgeOptions,
+  nodeAttributes,
+  edgeAttributes,
   isClass: false,
 })
 
@@ -160,8 +168,31 @@ export const ClassNode = (...args: Parameters<typeof Node>): Node => ({
   isClass: true,
 })
 
+/** Map over all references found in a node. */
+Node.mapReferences =
+  (f: (reference: Reference) => Reference) =>
+  ({signatures, ...node}: Node): Node =>
+    ({
+      ...node,
+      signatures: pipe(
+        signatures,
+        Array.map(
+          ({reference, ...signature}) =>
+            ({...signature, reference: f(reference)}) as Signature,
+        ),
+      ),
+    }) as Node
+
 /** Collect all reference targets from node signatures. */
 Node.collectTargets = ({signatures}: Node): string[] =>
   pipe(signatures, Array.map(pluck('reference')), Reference.collectTargets)
+
+/** Set Graphviz node attributes of the node. */
+Node.setAttributes =
+  (nodeAttributes: NodeAttributesObject) =>
+  (node: Node): Node => ({
+    ...node,
+    nodeAttributes,
+  })
 
 const dedupeAndSort = flow(dedupeStrings, Array.sort(String.Order))
