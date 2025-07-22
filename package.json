@@ -1,7 +1,7 @@
 {
   "name": "effect-schema-viz",
   "description": "Visualize your Effect/Schema in Graphviz.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "author": "Ran Eilam <ran@haag59.com> (https://middle-ages.github.io/)",
   "license": "ISC",
