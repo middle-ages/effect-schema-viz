@@ -9,11 +9,11 @@ const style = setAttributes({margin: 1 / 24, shape: 'box', fontname: 'Inter'})
 const Foo = pipe(
   {foo: Schema.String},
   Schema.Struct,
-  setIdentifier('Foo'),
   style,
+  setIdentifier('Foo'),
 )
 
-const Bar = pipe({bar: Foo}, Schema.Struct, setIdentifier('Bar'), style)
+const Bar = pipe({bar: Foo}, Schema.Struct, style, setIdentifier('Bar'))
 
 const dot = await Effect.runPromise(
   schemasToDot('basic struct example')(Foo, Bar),

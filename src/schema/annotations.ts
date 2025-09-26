@@ -108,7 +108,7 @@ export const Struct = Object.assign(Schema.Struct, {
     <Fields extends Schema.Struct.Fields>(fields: Fields) =>
       pipe(
         Schema.Struct(fields),
-        setIdentifier(identifier),
         setAttributes(nodeAttributes, edgeAttributes),
+        setIdentifier(identifier),
       ),
 })

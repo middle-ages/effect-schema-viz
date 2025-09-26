@@ -10,8 +10,8 @@ export LEVEL=2
 
 dev/clean
 
-dev/circular &
-dev/build-examples &
+pnpm check
+
 dev/build-docs &
 dev/lint &
 dev/test-run --reporter=dot &

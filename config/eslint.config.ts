@@ -2,11 +2,11 @@ import * as eslint from '@eslint/js'
 import prettierRecommended from 'eslint-plugin-prettier/recommended'
 import sonarjs from 'eslint-plugin-sonarjs'
 import eslintPluginUnicorn from 'eslint-plugin-unicorn'
-import {globalIgnores} from 'eslint/config'
+import {globalIgnores, defineConfig} from 'eslint/config'
 import * as globals from 'globals'
 import tslint from 'typescript-eslint'
 
-const config = tslint.config(
+const config = defineConfig(
   globalIgnores([
     './node_modules',
     './dist',
@@ -71,6 +71,8 @@ const config = tslint.config(
 
       // Can't do module augmentation.
       '@typescript-eslint/no-namespace': 'off',
+
+      'unicorn/no-array-sort': 'off',
 
       'unicorn/filename-case': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',

@@ -13,26 +13,26 @@ module.exports = {
         circular: true,
       },
     },
-    {
-      name: 'no-orphans',
-      comment:
-        "This is an orphan module - it's likely not used (anymore?). Either use it or " +
-        "remove it. If it's logical this module is an orphan (i.e. it's a config file), " +
-        'add an exception for it in your dependency-cruiser configuration. By default ' +
-        'this rule does not scrutinize dot-files (e.g. .eslintrc.js), TypeScript declaration ' +
-        'files (.d.ts), tsconfig.json and some of the babel and webpack configs.',
-      severity: 'warn',
-      from: {
-        orphan: true,
-        pathNot: [
-          '(^|/)[.][^/]+[.](?:js|cjs|mjs|ts|cts|mts|json)$', // dot files
-          '[.]d[.]ts$', // TypeScript declaration files
-          '(^|/)tsconfig[.]json$', // TypeScript config
-          '(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$', // other configs
-        ],
-      },
-      to: {},
-    },
+    //{
+    //  name: 'no-orphans',
+    //  comment:
+    //    "This is an orphan module - it's likely not used (anymore?). Either use it or " +
+    //    "remove it. If it's logical this module is an orphan (i.e. it's a config file), " +
+    //    'add an exception for it in your dependency-cruiser configuration. By default ' +
+    //    'this rule does not scrutinize dot-files (e.g. .eslintrc.js), TypeScript declaration ' +
+    //    'files (.d.ts), tsconfig.json and some of the babel and webpack configs.',
+    //  severity: 'warn',
+    //  from: {
+    //    orphan: true,
+    //    pathNot: [
+    //      '(^|/)[.][^/]+[.](?:js|cjs|mjs|ts|cts|mts|json)$', // dot files
+    //      '[.]d[.]ts$', // TypeScript declaration files
+    //      '(^|/)tsconfig[.]json$', // TypeScript config
+    //      '(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$', // other configs
+    //    ],
+    //  },
+    //  to: {},
+  //  },
     {
       name: 'no-deprecated-core',
       comment:
@@ -202,26 +202,26 @@ module.exports = {
        module systems it knows of. It's the default because it's the safe option
        It might come at a performance penalty, though.
        moduleSystems: ['amd', 'cjs', 'es6', 'tsd']
-      
+
        As in practice only commonjs ('cjs') and ecmascript modules ('es6')
        are widely used, you can limit the moduleSystems to those.
      */
 
     // moduleSystems: ['cjs', 'es6'],
 
-    /* 
+    /*
       false: don't look at JSDoc imports (the default)
       true: dependency-cruiser will detect dependencies in JSDoc-style
       import statements. Implies "parser": "tsc", so the dependency-cruiser
       will use the typescript parser for JavaScript files.
-     
+
       For this to work the typescript compiler will need to be installed in the
       same spot as you're running dependency-cruiser from.
      */
     // detectJSDocImports: true,
 
     /* prefix for links in html and svg output (e.g. 'https://github.com/you/yourrepo/blob/main/'
-       to open it on your online repo or `vscode://file/${process.cwd()}/` to 
+       to open it on your online repo or `vscode://file/${process.cwd()}/` to
        open it in visual studio code),
      */
     // prefix: `vscode://file/${process.cwd()}/`,
@@ -266,7 +266,7 @@ module.exports = {
        to './webpack.conf.js'.
 
        The (optional) `env` and `arguments` attributes contain the parameters
-       to be passed if your webpack config is a function and takes them (see 
+       to be passed if your webpack config is a function and takes them (see
         webpack documentation for details)
      */
     // webpackConfig: {
@@ -313,18 +313,18 @@ module.exports = {
       /* What to consider a 'main' field in package.json */
       mainFields: ['module', 'main', 'types', 'typings'],
       /* A list of alias fields in package.jsons
-        
+
          See [this specification](https://github.com/defunctzombie/package-browser-field-spec) and
          the webpack [resolve.alias](https://webpack.js.org/configuration/resolve/#resolvealiasfields)
          documentation.
-         
+
          Defaults to an empty array (= don't use alias fields).
        */
       // aliasFields: ["browser"],
     },
 
-    /* skipAnalysisNotInRules will make dependency-cruiser execute 
-       analysis strictly necessary for checking the rule set only. 
+    /* skipAnalysisNotInRules will make dependency-cruiser execute
+       analysis strictly necessary for checking the rule set only.
 
        See https://github.com/sverweij/dependency-cruiser/blob/main/doc/options-reference.md#skipanalysisnotinrules
        for details
